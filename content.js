@@ -1,6 +1,17 @@
 var chatBGImageURL = "https://i.imgur.com/02HMWHU.png";
+var enabled;
 
-var state = "inactive";
+const refreshStatus = async () => {
+  chrome.storage.sync.get('enabled', function (result) {
+    if (result.enabled === undefined) {
+      chrome.storage.sync.set({ enabled: true }, function () { ; });
+      enabled = true;
+    } else {
+      enabled = result.enabled;
+    }
+    chrome.runtime.sendMessage({ "enabled": enabled }, function (response) { ; });
+  });
+}; refreshStatus();
 
 const applyCustomStyling = () => {
   const targetElement = document.querySelector('[data-asset-chat-background-dark="true"]');
@@ -24,15 +35,16 @@ const removeCustomStyling = () => {
 
 const customPage = async () => {
   const observerConfig = { attributes: true, childList: true, subtree: true };
-
   const mutationCallback = (mutationsList) => {
     for (const mutation of mutationsList) {
       if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-        applyCustomStyling();
+        refreshStatus().then(() => {
+          enabled === true ? applyCustomStyling() : removeCustomStyling();
+        });
+        
       }
     }
   };
-
   const observer = new MutationObserver(mutationCallback);
   observer.observe(document.body, observerConfig);
   applyCustomStyling();
