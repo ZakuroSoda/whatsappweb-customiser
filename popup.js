@@ -1,5 +1,6 @@
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  if (message.enabled === true) {
+// runs once on popup open
+chrome.storage.sync.get('enabled', function (result) {
+  if (result.enabled === true) {
     document.getElementById("status").className = "btn btn-success";
     document.getElementById("status").innerHTML = "Active";
   }
@@ -9,12 +10,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-  var btn = document.getElementById('status');
-  btn.addEventListener('click', function () {
-    reverseState();
-  });
-});
 
 const reverseState = () => {
   chrome.storage.sync.get('enabled', function (result) {
@@ -33,7 +28,9 @@ const reverseState = () => {
   }
 }
 
-// debug func
-// chrome.storage.sync.get('enabled', function (result) {
-//   console.log(result.enabled);
-// });
+document.addEventListener('DOMContentLoaded', function () {
+  var btn = document.getElementById('status');
+  btn.addEventListener('click', function () {
+    reverseState();
+  });
+});

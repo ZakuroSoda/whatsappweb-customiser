@@ -9,7 +9,6 @@ const refreshStatus = async () => {
     } else {
       enabled = result.enabled;
     }
-    chrome.runtime.sendMessage({ "enabled": enabled }, function (response) { ; });
   });
 }; refreshStatus();
 
@@ -47,7 +46,6 @@ const customPage = async () => {
   };
   const observer = new MutationObserver(mutationCallback);
   observer.observe(document.body, observerConfig);
-  applyCustomStyling();
 };
 
 customPage();
