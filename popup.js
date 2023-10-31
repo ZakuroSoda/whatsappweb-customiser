@@ -10,7 +10,12 @@ chrome.storage.sync.get('enabled', function (result) {
   }
 });
 
+// runs once on popup open
+chrome.storage.sync.get('chatBGImageURL', function (result) {
+  document.getElementById("chatBGImageURL").value = result.chatBGImageURL;  
+});
 
+//change handler for enabled state
 const reverseState = () => {
   chrome.storage.sync.get('enabled', function (result) {
     console.log("Enabled: " + !result.enabled)
@@ -28,9 +33,19 @@ const reverseState = () => {
   }
 }
 
+//change handler for chatBGImageURL
+const editChatBGImageURL = () => {
+  chrome.storage.sync.set({ "chatBGImageURL": document.getElementById("chatBGImageURL").value }, function () { ; });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   var btn = document.getElementById('status');
   btn.addEventListener('click', function () {
     reverseState();
+  });
+  
+  var link = document.getElementById('chatBGImageURL');
+  link.addEventListener('change', function () {
+    editChatBGImageURL();
   });
 });

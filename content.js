@@ -1,4 +1,4 @@
-var chatBGImageURL = "https://i.imgur.com/02HMWHU.png";
+var chatBGImageURL;
 var enabled;
 
 const refreshStatus = async () => {
@@ -8,6 +8,15 @@ const refreshStatus = async () => {
       enabled = true;
     } else {
       enabled = result.enabled;
+    }
+  });
+  
+  chrome.storage.sync.get('chatBGImageURL', function (result) {
+    if (result.chatBGImageURL === undefined) {
+      chrome.storage.sync.set({ 'chatBGImageURL': "https://i.imgur.com/02HMWHU.png" }, function () { ; });
+      chatBGImageURL = "https://i.imgur.com/02HMWHU.png";
+    } else {
+      chatBGImageURL = result.chatBGImageURL;
     }
   });
 }; refreshStatus();
